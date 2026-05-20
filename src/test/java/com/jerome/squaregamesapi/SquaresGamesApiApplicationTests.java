@@ -1,4 +1,4 @@
-package com.jerome.squaresgamesapi;
+package com.jerome.squaregamesapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,13 +1,13 @@
-package com.jerome.squaresgamesapi;
+package com.jerome.squaregamesapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SquaresGamesApiApplication {
+public class SquareGamesApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SquaresGamesApiApplication.class, args);
+        SpringApplication.run(SquareGamesApiApplication.class, args);
     }
 
 }
