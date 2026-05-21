@@ -1,4 +1,4 @@
-package com.jerome.squaregamesapi.controller;
+package com.jerome.squaregamesapi.sensor.controller;
 
 import com.jerome.squaregamesapi.sensor.HeartbeatSensor;
 import org.springframework.stereotype.Service;

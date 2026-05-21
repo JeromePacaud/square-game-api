@@ -1,4 +1,27 @@
-@BASE_URL=http://localhost:8082/
+@BASE_URL = http://localhost:8082/api/v1/games
 
-### Récupérer les BPM
-GET {{BASE_URL}}/heartbeat
+### Créer une partie
+POST {{BASE_URL}}
+Content-Type: application/json
+
+{
+  "gameType": "TicTacToe",
+  "playerCount": 2,
+  "boardSize": 3
+}
+
+### Récupérer l'état d'une partie (remplace l'uuid)
+GET {{BASE_URL}}/c8771c91-d692-434b-a4e7-2d903095a003
+
+### Lister les coups possibles
+GET {{BASE_URL}}/c8771c91-d692-434b-a4e7-2d903095a003/moves
+
+### Jouer un coup
+POST {{BASE_URL}}/c8771c91-d692-434b-a4e7-2d903095a003/moves
+Content-Type: application/json
+
+{
+  "tokenName": "X",
+  "x": 0,
+  "y": 1
+}
