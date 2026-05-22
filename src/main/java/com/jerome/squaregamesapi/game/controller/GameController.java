@@ -5,7 +5,6 @@ import com.jerome.squaregamesapi.game.dto.MoveParams;
 import com.jerome.squaregamesapi.game.service.GameService;
 import fr.le_campus_numerique.square_games.engine.CellPosition;
 import fr.le_campus_numerique.square_games.engine.Game;
-import fr.le_campus_numerique.square_games.engine.InvalidPositionException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

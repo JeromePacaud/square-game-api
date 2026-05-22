@@ -1,47 +1,55 @@
 package com.jerome.squaregamesapi.game.service;
 
+import com.jerome.squaregamesapi.plugin.GamePlugin;
 import fr.le_campus_numerique.square_games.engine.*;
-import fr.le_campus_numerique.square_games.engine.tictactoe.TicTacToeGameFactory;
-import fr.le_campus_numerique.square_games.engine.taquin.TaquinGameFactory;
-import fr.le_campus_numerique.square_games.engine.connectfour.ConnectFourGameFactory;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+
 @Service
+@AllArgsConstructor
 public class GameServiceImpl implements GameService {
 
+    // Injection automatique par spring de tous les @Component qui implémentent GamePlugin
+    private final List<GamePlugin> gamePlugins;
 
     // Stockage en mémoire des parties en cours
     private final Map<UUID, Game> games = new HashMap<>();
 
-    // Stockage des factories disponibles
-    private final Map<String, GameFactory> gameFactories = Map.of(
-            "TicTacToe", new TicTacToeGameFactory(),
-            "Taquin", new TaquinGameFactory(),
-            "ConnectFour", new ConnectFourGameFactory()
-    );
-
     @Override
     public Game createGame(String gameType, int playerCount, int boardSize) {
-        GameFactory gameFactory = gameFactories.get(gameType);
+        // Récupérer le plugin correspondant au type de jeu demandé
+        GamePlugin foundPlugin = null;
 
-        if (gameFactory == null) {
-            throw new RuntimeException("Type de jeu inconnu : " + gameType);
+        for (GamePlugin plugin : gamePlugins) {
+            if (plugin.getGameId().equals(gameType)) {
+                foundPlugin = plugin;
+                break;
+            }
         }
 
-        Game game = gameFactory.createGame(playerCount, boardSize);
+        // Si aucun plugin n'est trouvé pour le type de jeu demandé
+        if (foundPlugin == null) {
+            throw new RuntimeException("Type de jeu non trouvé : " + gameType);
+        }
 
-        // Enregistrer le jeu avec un ID unique dans games
-        games.put(game.getId(), game);
-
+        // Si le plugin est trouvé, on crée la partie
+        Game game;
+        if (playerCount == 0 || boardSize == 0) {
+            game = foundPlugin.createGame();
+        } else {
+            game = foundPlugin.createGame(playerCount, boardSize);
+        }
+        this.games.put(game.getId(), game);
         return game;
     }
 
     @Override
     public Game getGame(UUID gameId) {
         // Récupérer le jeu dans games
-        Game game = games.get(gameId);
+        Game game = this.games.get(gameId);
 
         if (game == null) {
             throw new RuntimeException("Jeu non trouvé : " + gameId);
@@ -86,7 +94,7 @@ public class GameServiceImpl implements GameService {
         chercher dans les jetons déjà joués (au cas où le client envoie un nom de jeton qui a déjà été joué).
         */
         if(foundToken == null) {
-            for(Token token : game.getRemainingTokens()) {
+            for(Token token : game.getBoard().values()) {
                 if(token.getName().equals(tokenName)) {
                     foundToken = token;
                     break;
