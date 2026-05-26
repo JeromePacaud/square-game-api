@@ -29,13 +29,13 @@ Content-Type: application/json
 }
 
 ### Récupérer l'état d'une partie (remplace l'uuid)
-GET {{BASE_URL_GAMES}}/646e902e-b789-4c25-ac9e-ad3a9d698f20
+GET {{BASE_URL_GAMES}}/bcfefa2a-085d-4966-927b-e3d4f204b814
 
 ### Lister les coups possibles
-GET {{BASE_URL_GAMES}}/646e902e-b789-4c25-ac9e-ad3a9d698f20/moves
+GET {{BASE_URL_GAMES}}/bcfefa2a-085d-4966-927b-e3d4f204b814/moves
 
 ### Jouer un coup
-POST {{BASE_URL_GAMES}}/646e902e-b789-4c25-ac9e-ad3a9d698f20/moves
+POST {{BASE_URL_GAMES}}/bcfefa2a-085d-4966-927b-e3d4f204b814/moves
 Content-Type: application/json
 
 {

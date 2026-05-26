@@ -1,5 +1,6 @@
 package com.jerome.squaregamesapi.game.service;
 
+import com.jerome.squaregamesapi.game.dao.GameDao;
 import com.jerome.squaregamesapi.plugin.GamePlugin;
 import fr.le_campus_numerique.square_games.engine.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ public class GameServiceImpl implements GameService {
     private final List<GamePlugin> gamePlugins;
 
     // Stockage en mémoire des parties en cours
-    private final Map<UUID, Game> games = new HashMap<>();
+    private final GameDao gameDao;
 
     @Override
     public Game createGame(String gameType, int playerCount, int boardSize) {
@@ -42,20 +43,14 @@ public class GameServiceImpl implements GameService {
         } else {
             game = foundPlugin.createGame(playerCount, boardSize);
         }
-        this.games.put(game.getId(), game);
-        return game;
+
+        return gameDao.upsert(game);
     }
 
     @Override
     public Game getGame(UUID gameId) {
-        // Récupérer le jeu dans games
-        Game game = this.games.get(gameId);
-
-        if (game == null) {
-            throw new RuntimeException("Jeu non trouvé : " + gameId);
-        }
-
-        return game;
+        return gameDao.findById(gameId.toString())
+                .orElseThrow(() -> new RuntimeException("Jeu non trouvée : " + gameId));
     }
 
     @Override
@@ -76,7 +71,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game play(UUID gameId, String tokenName, int posX, int posY) throws InvalidPositionException {
-        Game game = getGame(gameId);
+        Game game = this.getGame(gameId);
 
         // Rechercher le jeton correspondant au nom dans les jetons restants du jeu
         Token foundToken = null;
