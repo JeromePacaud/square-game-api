@@ -17,6 +17,7 @@ public class GameServiceImpl implements GameService {
     private final List<GamePlugin> gamePlugins;
 
     // Stockage en mémoire des parties en cours
+    // private final GameDao gameDao;
     private final GameDao gameDao;
 
     @Override
