@@ -28,14 +28,14 @@ Content-Type: application/json
   "boardSize": 3
 }
 
-### Récupérer l'état d'une partie (remplace l'uuid)
-GET {{BASE_URL_GAMES}}/ce1495c4-26d7-4a56-b361-52cf3d08b9b0
+### Récupérer l'état d'une partie
+GET {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a
 
 ### Lister les coups possibles
-GET {{BASE_URL_GAMES}}/ce1495c4-26d7-4a56-b361-52cf3d08b9b0/moves
+GET {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a/moves
 
 ### Jouer un coup
-POST {{BASE_URL_GAMES}}/ce1495c4-26d7-4a56-b361-52cf3d08b9b0/moves
+POST {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a/moves
 Content-Type: application/json
 
 {

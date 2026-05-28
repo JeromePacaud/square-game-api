@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 @Repository
 @AllArgsConstructor
-@Primary
 public class JdbcGameDao implements GameDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
