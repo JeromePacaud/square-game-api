@@ -4,7 +4,9 @@ import com.jerome.squaregamesapi.game.dao.GameDao;
 import com.jerome.squaregamesapi.plugin.GamePlugin;
 import fr.le_campus_numerique.square_games.engine.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -16,12 +18,20 @@ public class GameServiceImpl implements GameService {
     // Injection automatique par spring de tous les @Component qui implémentent GamePlugin
     private final List<GamePlugin> gamePlugins;
 
+    // Injection du service de validation d'un utilisateur
+    private final UserValidationService userValidationService;
+
     // Stockage en mémoire des parties en cours
     // private final GameDao gameDao;
     private final GameDao gameDao;
 
     @Override
-    public Game createGame(String gameType, int playerCount, int boardSize) {
+    public Game createGame(String gameType, int playerCount, int boardSize, UUID userId) {
+
+        if (!userValidationService.validateUser(userId)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
         // Récupérer le plugin correspondant au type de jeu demandé
         GamePlugin foundPlugin = null;
 
@@ -55,6 +65,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public Collection<Game> getGames(UUID userId) {
+        if (!userValidationService.validateUser(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        return gameDao.findAll()
+                .filter(g -> g.getPlayerIds().contains(userId))
+                .toList();
+    }
+
+    @Override
     public Collection<CellPosition> getMoves(UUID gameId) {
         Game game = this.getGame(gameId);
         Collection<CellPosition> moves = new ArrayList<>();
@@ -71,7 +91,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game play(UUID gameId, String tokenName, int posX, int posY) throws InvalidPositionException {
+    public Game play(UUID gameId, String tokenName, int posX, int posY, UUID userId) throws InvalidPositionException {
+        if (!userValidationService.validateUser(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
         Game game = this.getGame(gameId);
 
         // Rechercher le jeton correspondant au nom dans les jetons restants du jeu
@@ -103,9 +127,21 @@ public class GameServiceImpl implements GameService {
             throw new RuntimeException("Jeton non trouvé : " + tokenName);
         }
 
+        /*
+        TODO: à reprendre plus tard les UUID des joueurs sont générer par le moteur de jeu et ne
+         correspondent pas pas à ceux créer par l'app user
+        */
+//        if (game.getCurrentPlayerId().equals(userId)) {
+//            CellPosition position = new CellPosition(posX, posY);
+//            foundToken.moveTo(position);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+//        }
+
         CellPosition position = new CellPosition(posX, posY);
         foundToken.moveTo(position);
 
         return game;
     }
+
 }

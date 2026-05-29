@@ -1,6 +1,6 @@
 @BASE_URL_CATALOG = http://localhost:8082/api/v1/catalog
 @BASE_URL_GAMES = http://localhost:8082/api/v1/games
-
+@GAME_ID = 48e8b246-b266-43f2-ab95-f9937521a3b3
 
 ### Catalogue en français
 GET {{BASE_URL_CATALOG}}
@@ -28,15 +28,40 @@ Content-Type: application/json
   "boardSize": 3
 }
 
+### Créer une partie avec des valeurs personnalisées et un Utilisateur vérifié
+POST {{BASE_URL_GAMES}}
+Content-Type: application/json
+X-UserId: d451b094-5137-4520-b8f2-b01914e2c1f1
+
+{
+  "gameType": "tictactoe",
+  "playerCount": 2,
+  "boardSize": 3
+}
+
+### Créer une partie avec un uuid invalide
+POST {{BASE_URL_GAMES}}
+Content-Type: application/json
+X-Userid: 5e153087-52f5-4606-af0e-76cf46fe95bc
+
+{
+  "gameType": "tictactoe",
+  "playerCount": 2,
+  "boardSize": 3
+}
+
 ### Récupérer l'état d'une partie
-GET {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a
+GET {{BASE_URL_GAMES}}/{{GAME_ID}}
+X-UserId: d451b094-5137-4520-b8f2-b01914e2c1f1
+
 
 ### Lister les coups possibles
-GET {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a/moves
+GET {{BASE_URL_GAMES}}/{{GAME_ID}}/moves
 
 ### Jouer un coup
-POST {{BASE_URL_GAMES}}/54cc43a2-7d8a-4cd0-8178-acbaae3c5e9a/moves
+POST {{BASE_URL_GAMES}}/{{GAME_ID}}/moves
 Content-Type: application/json
+X-UserId: d451b094-5137-4520-b8f2-b01914e2c1f1
 
 {
   "tokenName": "X",

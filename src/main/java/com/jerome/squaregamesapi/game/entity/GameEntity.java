@@ -8,7 +8,7 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "game")
 public class GameEntity {
     @Id public String id;
     public String factoryId;

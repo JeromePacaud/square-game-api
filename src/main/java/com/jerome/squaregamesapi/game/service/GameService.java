@@ -8,8 +8,9 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface GameService {
-    Game createGame(String gameType, int playerCount, int boardSize);
+    Game createGame(String gameType, int playerCount, int boardSize, UUID userId);
     Game getGame(UUID gameId);
+    Collection<Game> getGames(UUID userId);
     Collection<CellPosition> getMoves(UUID gameId);
-    Game play(UUID gameId, String tokenName, int posX, int posY) throws InvalidPositionException;
+    Game play(UUID gameId, String tokenName, int posX, int posY, UUID userId) throws InvalidPositionException;
 }

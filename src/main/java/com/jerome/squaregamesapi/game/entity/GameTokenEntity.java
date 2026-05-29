@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity(name = "game_token")
 public class GameTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

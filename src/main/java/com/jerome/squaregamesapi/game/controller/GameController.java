@@ -5,6 +5,7 @@ import com.jerome.squaregamesapi.game.dto.MoveParams;
 import com.jerome.squaregamesapi.game.service.GameService;
 import fr.le_campus_numerique.square_games.engine.CellPosition;
 import fr.le_campus_numerique.square_games.engine.Game;
+import fr.le_campus_numerique.square_games.engine.InvalidPositionException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +20,19 @@ public class GameController {
 
     // Créer une nouvelle partie
     @PostMapping
-    public Game createGame(@RequestBody GameCreationParams params) {
-        return gameService.createGame(params.getGameType(), params.getPlayerCount(), params.getBoardSize());
+    public Game createGame(@RequestBody GameCreationParams params, @RequestHeader("X-UserId")  UUID userId) {
+        return gameService.createGame(params.getGameType(), params.getPlayerCount(), params.getBoardSize(), userId);
     }
 
     // Récupère l'état d'une partie
     @GetMapping("/{gameId}")
     public Game getGame(@PathVariable UUID gameId) {
         return gameService.getGame(gameId);
+    }
+
+    @GetMapping()
+    public Collection<Game> getGames(@RequestHeader("X-UserId")  UUID userId) {
+        return gameService.getGames(userId);
     }
 
     // Liste les coups possible
@@ -37,12 +43,13 @@ public class GameController {
 
     // Joue un coup
     @PostMapping("/{gameId}/moves")
-    public Game play(@PathVariable UUID gameId, @RequestBody MoveParams params) throws Exception {
+    public Game play(@PathVariable UUID gameId, @RequestBody MoveParams params, @RequestHeader("X-UserId") UUID userId) throws InvalidPositionException {
         return gameService.play(
                 gameId,
                 params.getTokenName(),
                 params.getPosX(),
-                params.getPosY()
+                params.getPosY(),
+                userId
         );
 
     }
